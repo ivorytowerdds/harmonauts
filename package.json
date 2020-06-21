@@ -1,0 +1,31 @@
+{
+  "name": "harmony-punks",
+  "version": "1.0.0",
+  "description": "Harmony Punks App",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivorytowerdds/harmony-punks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ivorytowerdds/harmony-punks/issues"
+  },
+  "homepage": "https://github.com/ivorytowerdds/harmony-punks#readme",
+  "dependencies": {
+    "@harmony-js/core": "^0.1.46",
+    "dotenv": "^8.2.0",
+    "tslib": "^2.0.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-2": "^6.3.13",
+    "babel-preset-stage-3": "^6.3.13",
+    "babel-polyfill": "^6.7.4"
+  }
+}
