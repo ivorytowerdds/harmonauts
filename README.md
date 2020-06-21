@@ -1,5 +1,5 @@
 # Harmony-punks
-Harmony Punks is a collection game ported to [Harmony](http://harmony.one) blockchain. people can either claim a punk or buy punks from someone else. All characters are unique and collectible with proof of ownership stored on the blockchain.
+Harmony Punks is a collection game ported to [Harmony](http://harmony.one) blockchain. People can either claim a punk or buy punks from someone else. All characters are unique and collectible with proof of ownership stored on the harmony blockchain.
 
 # Install instructions
 
@@ -41,7 +41,7 @@ truffle compile
 ```
 truffle migrate --network mainnet --reset
 ```
-Note: when you run this command, you need to be under `[PATH]/harmony-punks`
+Note: when you run this command, you need to be in the `[PATH]/harmony-punks`
 
 * Running an example that initalize one owner for a punk and check the information of that punk.
 ```
@@ -49,4 +49,4 @@ truffle exec test/test.js --network mainnet
 ```
 
 ## Credits
-Smart contract code of harmonypunks is adopted from: https://github.com/ivorytowerdds/harmony-punks.git
+Smart contract code of harmonypunks is adopted from: https://github.com/larvalabs/cryptopunks.git
