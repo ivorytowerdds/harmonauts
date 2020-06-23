@@ -48,5 +48,5 @@ Note: when you run this command, you need to be in the `[PATH]/harmony-punks`
 truffle exec test/test.js --network mainnet
 ```
 
-## Credits
-Smart contract code of harmonypunks is adopted from: https://github.com/larvalabs/cryptopunks.git
+## Disclaimer !!
+This project is sourced from [cryptopunks](https://github.com/larvalabs/cryptopunks), an open source project. We are building it for technology demonstration, and not for commercial purposes.
