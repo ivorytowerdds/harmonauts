@@ -11,6 +11,11 @@ class Util {
     return Y + M + D + h + m + s;
   }
 
+  // shorter B32 address
+  shorterB32Address(address) {
+    return address.slice(0, 8)+"...."+address.slice(-5)
+  }
+
   stringToCapitalize(str) {
     var arr = str.toLowerCase().split('_');
     arr = arr.map(function(val) {

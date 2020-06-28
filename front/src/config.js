@@ -598,6 +598,7 @@ export const contractConfig = {
   ],
   defaultGasPrice: '0.005',
   defaultGasLimit: '1000000',
+  eventApiDomain: 'https://harmony-explorer-mainnet.firebaseio.com',
 }
 
 export const punksDescConfig = {

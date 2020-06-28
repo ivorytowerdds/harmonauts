@@ -84,14 +84,43 @@
             <el-row>
               <el-col :span="24">
                 <div class="punk-sub-title">Transaction History</div>
-
+                <el-table
+                  class="table-history"
+                  :data="eventTableData"
+                  :row-class-name="rowColorForType"
+                  :default-sort = "{prop: 'txn', order: 'descending'}"
+                  border
+                  empty-text="No History Transaction"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="type"
+                    label="Type"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="from"
+                    label="From"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="to"
+                    label="To">
+                  </el-table-column>
+                  <el-table-column
+                    prop="amount"
+                    label="Amount($ONE)">
+                  </el-table-column>
+                  <el-table-column
+                    prop="txn"
+                    label="Txn">
+                  </el-table-column>
+                </el-table>
               </el-col>
             </el-row>
           </el-col>
         </el-row>
       </el-col>
     </el-row>
-    
   </div>
 </template>
 
@@ -105,12 +134,10 @@ export default {
   components: {},
   computed: {
     ownerB32Text: function () {
-      let raw = this.ownerB32
-      return raw.slice(0, 8)+"...."+raw.slice(-5)
+      return this.webUtil.shorterB32Address(this.ownerB32)
     },
     bidderB32Text: function () {
-      let raw = this.bidderB32
-      return raw.slice(0, 8)+"...."+raw.slice(-5)
+      return this.webUtil.shorterB32Address(this.bidderB32)
     }
   },
   data() {
@@ -147,6 +174,8 @@ export default {
       isBuyLoading: false,
       isBidLoading: false,
       isAcceptBideLoading: false,
+      // history
+      eventTableData: [],
     }
   },
   methods: {
@@ -384,8 +413,41 @@ export default {
       });
     },
     getHistoryTransaction() {
-      
+      this.axios
+        .get(contractConfig.eventApiDomain+'/harmony-punk/'+this.punkId+'.json', {
+        })
+        .then(response => {
+          let events = response.data
+          if (events) {
+            for (let index in events) {
+              let event = events[index]
+              // trans amount
+              if ('Sold' == event.Type) {
+                event.Amount = new this.hmy.utils.Unit(event.Amount).toOne()
+              }
+              this.eventTableData.push({
+                type: event.Type,
+                from: event.From ? this.webUtil.shorterB32Address(event.From) : '-',
+                to: event.To ? this.webUtil.shorterB32Address(event.To) : '-',
+                txn: this.webUtil.timestampToDate(event.Txn * 1000),
+                amount: event.Amount ? event.Amount : '-',
+              })
+            }
+          }
+        })
     },
+    rowColorForType({row}) {
+      switch (row.type) {
+        case 'Sold':
+          return 'row-sold'
+        case 'Offered':
+          return 'row-offered'
+        case 'Bid':
+          return 'row-bid'
+        default :
+          return 'row-other'
+      }
+    }
   },
   mounted: function () {
     this.punkDesc = punksDescConfig[this.punkId]
@@ -397,6 +459,9 @@ export default {
     }, 100)
 
     this.initContract().then(async () => {
+      // load history events
+      this.getHistoryTransaction()
+
       // get punk owner
       await this.getPunkOwner()
 
@@ -406,8 +471,6 @@ export default {
       // check if punk has bid
       await this.getPunkBids()
 
-      await this.getHistoryTransaction()
-
       this.isLoadFinish = true
     })
   }
@@ -415,6 +478,9 @@ export default {
 </script>
 
 <style>
+  .row-panel .el-button {
+    font-size: 16px;
+  }
   .punk-breadcrumb {
     padding: 8px 15px;
     background-color: #f5f5f5;
@@ -474,5 +540,21 @@ export default {
   .accessory-count .count {
     font-weight: 700;
     font-size: 18px;
+  }
+  .table-history th, .table-history td {
+    font-size: 17px;
+    text-align: center;
+  }
+  .table-history tr.row-offered {
+    background: #d6adad;
+  }
+  .table-history tr.row-bid {
+    background: #b8a7ce;
+  }
+  .table-history tr.row-sold {
+    background: #adc9d6;
+  }
+  .table-history tr.row-other {
+    background: #add6b8;
   }
 </style>

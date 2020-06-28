@@ -41,8 +41,7 @@ export default {
   components: {},
   computed: {
     addressText: function () {
-      let raw = this.address
-      return raw.slice(0, 8)+"...."+raw.slice(-5)
+      return this.webUtil.shorterB32Address(this.address)
     }
   },
   data() {
