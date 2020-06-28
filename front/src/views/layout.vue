@@ -3,21 +3,23 @@
     <el-container>
     <el-header>
       <el-row>
-        <el-col :span="4" :offset="3">
+        <el-col :lg="3" :xl="4" class="system-placeholder"></el-col>
+        <el-col :span="4">
           <img :src="harmonyLogoSrc" alt="Harmony">
         </el-col>
-        <el-col :span="10" class="system-userinfo">
+        <el-col :lg="9" :xl="7" class="system-userinfo">
           <div v-if="address != '0x0'">
             <div>Connected to Harmony </div>
             <div class="address">{{ addressText }}</div>
           </div>
         </el-col>
-        <el-col :span="4" class="system-button">
+        <el-col :span="5" class="system-button">
             <el-button
               type="success"
               class="button-withdraw"
               @click="withdraw"
               :loading="isWithdrawLoading"
+              :disabled="!initDone"
               v-if="address != '0x0'"
             >Withdraw</el-button>
             <el-button
@@ -64,7 +66,8 @@ export default {
       },
       harmonyLogoSrc: require('../assets/harmony-logo.svg'),
       address: "0x0",
-      isWithdrawLoading: false
+      isWithdrawLoading: false,
+      initDone: false,
     }
   },
   mounted: function () {
@@ -137,6 +140,7 @@ export default {
       })
       harmonyEx.setProvider(contractConfig.url)
       this.extPunks = harmonyEx.contracts.createContract(contractConfig.abi, contractConfig.address)
+      this.initDone = true
     },
     withdraw() {
       this.isWithdrawLoading = true
@@ -186,7 +190,7 @@ export default {
   .el-container .el-header {
     margin-bottom: 20px;
   }
-  .el-container .system-userinfo {
+  .el-container .system-userinfo, .system-placeholder {
     text-align: right;
     border: 1px solid transparent;
   }

@@ -1,7 +1,8 @@
 <template>
   <div class="home">
     <el-row>
-      <el-col :span="18" :offset="3">
+      <el-col :lg="3" :xl="4" class="system-placeholder"></el-col>
+      <el-col :lg="18" :xl="16">
         <el-row>
           <el-col :span="24">
             <div class="row-logo">

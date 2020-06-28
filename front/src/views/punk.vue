@@ -1,7 +1,8 @@
 <template>
   <div id="punk">
     <el-row>
-      <el-col :span="18" :offset="3">
+      <el-col :lg="3" :xl="4" class="system-placeholder"></el-col>
+      <el-col :lg="18" :xl="16">
         <el-row>
           <el-col :span="24">
             <el-breadcrumb separator-class="el-icon-arrow-right" class="punk-breadcrumb">
@@ -432,10 +433,6 @@ export default {
           if (events) {
             for (let index in events) {
               let event = events[index]
-              // trans amount
-              if ('Sold' == event.Type) {
-                event.Amount = new this.hmy.utils.Unit(event.Amount).toOne()
-              }
               this.eventTableData.push({
                 type: event.Type,
                 from: event.From ? this.webUtil.shorterB32Address(event.From) : '-',
