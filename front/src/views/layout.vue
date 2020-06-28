@@ -3,7 +3,7 @@
     <el-container>
     <el-header>
       <el-row>
-        <el-col :span="4" :offset="4">
+        <el-col :span="4" :offset="3">
           <img :src="harmonyLogoSrc" alt="Harmony">
         </el-col>
         <el-col :span="10" class="system-userinfo">
@@ -12,7 +12,14 @@
             <div class="address">{{ addressText }}</div>
           </div>
         </el-col>
-        <el-col :span="2" class="system-button">
+        <el-col :span="4" class="system-button">
+            <el-button
+              type="success"
+              class="button-withdraw"
+              @click="withdraw"
+              :loading="isWithdrawLoading"
+              v-if="address != '0x0'"
+            >Withdraw</el-button>
             <el-button
               type="primary"
               class="button-sign-in"
@@ -36,6 +43,10 @@
 </template>
 
 <script>
+import { HarmonyExtension } from '@harmony-js/core'
+import { ChainID, ChainType } from '@harmony-js/utils'
+import { contractConfig} from '../config.js'
+
 export default {
   name: "layout",
   components: {},
@@ -46,8 +57,14 @@ export default {
   },
   data() {
     return {
+      extPunks: null,
+      gasConfig: {
+        gasLimit: contractConfig.defaultGasLimit,
+        gasPrice: new this.hmy.utils.Unit(contractConfig.defaultGasPrice).asGwei().toWei(),
+      },
       harmonyLogoSrc: require('../assets/harmony-logo.svg'),
-      address: "0x0"
+      address: "0x0",
+      isWithdrawLoading: false
     }
   },
   mounted: function () {
@@ -56,6 +73,8 @@ export default {
       identity = JSON.parse(identity)
       this.address = identity.address
     }
+
+    this.initContract()
   },
   methods: {
     signIn() {
@@ -97,6 +116,60 @@ export default {
         message: 'wallet sign out success',
         type: 'success'
       });
+    },
+    waitForInjected() {
+      return new Promise((resolve) => {
+        const check = () => {
+            if (!window.harmony) setTimeout(check, 250)
+            else {
+              resolve(window.harmony)
+            }
+        }
+        check();
+      }) 
+    },
+    async initContract() {
+      await this.waitForInjected()
+
+      let harmonyEx = new HarmonyExtension(window.harmony, {
+        chainType: ChainType.Harmony,
+        chainId: ChainID.HmyMainnet,
+      })
+      harmonyEx.setProvider(contractConfig.url)
+      this.extPunks = harmonyEx.contracts.createContract(contractConfig.abi, contractConfig.address)
+    },
+    withdraw() {
+      this.isWithdrawLoading = true
+      this.extPunks.methods.withdraw().send(this.gasConfig).on('transactionHash', (hash) => {
+        console.log('hash', hash)
+        let hashText = hash.slice(0, 12)+"...."+hash.slice(-8)
+        this.$notify({
+          title: 'tx created success',
+          dangerouslyUseHTMLString: true,
+          message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a>',
+          duration: 8000,
+          type: 'info'
+        });
+      }).on('receipt', (receipt) => {
+          console.log('receipt', receipt)
+      }).on('confirmation', (confirmationNumber, receipt) => {
+          console.log('confirmationNumber', confirmationNumber, receipt)
+          this.isWithdrawLoading = false
+          let resSet = confirmationNumber.split(':')
+          if (resSet[0] == 'transaction failed') {
+            this.$message({
+              message: confirmationNumber,
+              type: 'error'
+            });
+          } else {
+            this.$message({
+              message: 'withdraw success',
+              type: 'success'
+            });
+          }
+      }).on('error', (error) => {
+          console.log('error', error)
+      })
     }
   }
 };
@@ -123,5 +196,8 @@ export default {
   }
   .el-container .system-button {
     text-align: right;
+  }
+  .button-withdraw, .button-sign-out, .button-sign-in {
+    width: 45%;
   }
 </style>

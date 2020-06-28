@@ -1,7 +1,7 @@
 <template>
   <div id="punk">
     <el-row>
-      <el-col :span="16" :offset="4">
+      <el-col :span="18" :offset="3">
         <el-row>
           <el-col :span="24">
             <el-breadcrumb separator-class="el-icon-arrow-right" class="punk-breadcrumb">
@@ -63,7 +63,16 @@
               </div>
               </el-col>
             </el-row>
-            <el-row class="row-panel" :gutter="20" v-if="isLoadFinish">
+            <el-row v-if="isLoadFinish && address == '0x0'" style="margin-top: 10px;">
+              <el-col :span="24">
+                <el-alert
+                  title="you need to sign in before buy or bid punk"
+                  type="warning"
+                  show-icon>
+                </el-alert>
+              </el-col>
+            </el-row>
+            <el-row class="row-panel" :gutter="20" v-if="isLoadFinish && address != '0x0'">
               <template v-if="owner == address">
                 <el-col :span="6">
                   <el-button type="primary" :loading="isForSaleLoading" icon="el-icon-truck" @click="setPunkForSale">For Sale</el-button>
@@ -99,8 +108,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="from"
-                    label="From"
-                    width="180">
+                    label="From">
                   </el-table-column>
                   <el-table-column
                     prop="to"
@@ -233,9 +241,12 @@ export default {
       })
 
       // TODO
-      const account = await window.harmony.getAccount();
-      const { address } = account;
-      this.address = this.hmy.crypto.fromBech32(address)
+      let identity = this.webUtil.getCookie("identity_harmony")
+      if (identity) {
+        const account = await window.harmony.getAccount();
+        const { address } = account;
+        this.address = this.hmy.crypto.fromBech32(address)
+      }
     },
     async getPunkOfferedForSale() {
       await this.punkContract.methods.punksOfferedForSale(this.punkId).call(this.gasConfig).then((data) => {

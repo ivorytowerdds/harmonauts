@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <el-row>
-      <el-col :span="16" :offset="4">
+      <el-col :span="18" :offset="3">
         <el-row>
           <el-col :span="24">
             <div class="row-logo">
@@ -122,7 +122,7 @@
                 <el-input v-model="searchPunkId" placeholder="input punkId you want to get"></el-input>
               </el-col>
               <el-col :span="4">
-                <el-button type="success" icon="el-icon-search" @click="getPunk">Search!</el-button>
+                <el-button type="success" icon="el-icon-search" @click="searchPunk">Search!</el-button>
               </el-col>
             </el-row>
           </el-col>
@@ -166,14 +166,6 @@ export default {
       })
       harmonyEx.setProvider(contractConfig.url)
       this.extPunks = harmonyEx.contracts.createContract(contractConfig.abi, contractConfig.address)
-
-      // this.state.players = await this.extPunks.methods.punkIndexToAddress(0).call({
-      //   gasLimit: '1000000',
-      //   gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
-      // }).then(function (data) {
-      //   console.log(data)
-      // })
-      // this.state.balance = await this.hmy.blockchain.getBalance({address: this.extPunks.address})
     },
     async setPunkInitOwner() {
       let newOwner = 'one1sj98rxxp4edltlc7wvjv6kt5tthaaw94xc98s6'//'one1sj98rxxp4edltlc7wvjv6kt5tthaaw94xc98s6' or 'one1es026ry3gze2auq6tg55e594cl5ghnsjf4gjde'
@@ -235,7 +227,7 @@ export default {
     this.loadImage()
   },
   mounted: function () {
-    this.initContract()
+    // this.initContract()
   }
 }
 </script>

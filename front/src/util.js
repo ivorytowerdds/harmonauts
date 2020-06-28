@@ -13,7 +13,7 @@ class Util {
 
   // shorter B32 address
   shorterB32Address(address) {
-    return address.slice(0, 8)+"...."+address.slice(-5)
+    return address.slice(0, 5)+"...."+address.slice(-5)
   }
 
   stringToCapitalize(str) {
