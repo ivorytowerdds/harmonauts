@@ -596,6 +596,8 @@ export const contractConfig = {
         "type": "function"
       }
   ],
+  defaultGasPrice: '0.005',
+  defaultGasLimit: '1000000',
 }
 
 export const punksDescConfig = {

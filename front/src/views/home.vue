@@ -173,7 +173,7 @@ export default {
       let newOwner = 'one1sj98rxxp4edltlc7wvjv6kt5tthaaw94xc98s6'//'one1sj98rxxp4edltlc7wvjv6kt5tthaaw94xc98s6' or 'one1es026ry3gze2auq6tg55e594cl5ghnsjf4gjde'
       await this.extPunks.methods.setInitialOwner(this.hmy.crypto.fromBech32(newOwner), 16).send({
         gasLimit: '1000000',
-        gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
+        gasPrice: new this.hmy.utils.Unit('0.005').asGwei().toWei(),
       }).on('transactionHash', function (hash) {
         console.log('hash', hash)
       }).on('receipt', function (receipt) {
@@ -185,7 +185,7 @@ export default {
     async setAllInitialOwnersAssigned() {
       await this.extPunks.methods.allInitialOwnersAssigned().send({
         gasLimit: '1000000',
-        gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
+        gasPrice: new this.hmy.utils.Unit('0.005').asGwei().toWei(),
       }).on('transactionHash', function (hash) {
         console.log('hash', hash)
       }).on('receipt', function (receipt) {
@@ -197,7 +197,7 @@ export default {
     async getPunk() {
       await this.extPunks.methods.getPunk(16).send({
         gasLimit: '1000000',
-        gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
+        gasPrice: new this.hmy.utils.Unit('0.005').asGwei().toWei(),
       }).on('transactionHash', function (hash) {
         console.log('hash', hash)
       }).on('receipt', function (receipt) {

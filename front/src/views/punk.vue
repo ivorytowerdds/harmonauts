@@ -68,8 +68,8 @@
                 <el-col :span="6">
                   <el-button type="primary" :loading="isForSaleLoading" icon="el-icon-truck" @click="setPunkForSale">For Sale</el-button>
                 </el-col>
-                <el-col :span="6">
-                  <el-button type="primary" :loading="isAcceptBideLoading" icon="el-icon-document-checked" @click="setPunkForSale">Accept Bid</el-button>
+                <el-col :span="6" v-if="hasBid">
+                  <el-button type="danger" :loading="isAcceptBideLoading" icon="el-icon-document-checked" @click="acceptBid">Accept Bid</el-button>
                 </el-col>
               </template>
               <template v-else>
@@ -116,6 +116,10 @@ export default {
   data() {
     return {
       extPunks: null,
+      gasConfig: {
+        gasLimit: contractConfig.defaultGasLimit,
+        gasPrice: new this.hmy.utils.Unit(contractConfig.defaultGasPrice).asGwei().toWei(),
+      },
       address: '0x0',
       // punk
       punkId: parseInt(this.$route.params.id),
@@ -192,10 +196,7 @@ export default {
       }
     },
     async getPunkOwner() {
-      await this.punkContract.methods.punkIndexToAddress(this.punkId).call({
-        gasLimit: '1000000',
-        gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
-      }).then((data) => {
+      await this.punkContract.methods.punkIndexToAddress(this.punkId).call(this.gasConfig).then((data) => {
         this.owner = data
         if (data != '0x0000000000000000000000000000000000000000') {
           this.ownerB32 = this.hmy.crypto.toBech32(data)
@@ -208,26 +209,19 @@ export default {
       this.address = this.hmy.crypto.fromBech32(address)
     },
     async getPunkOfferedForSale() {
-      await this.punkContract.methods.punksOfferedForSale(this.punkId).call({
-        gasLimit: '1000000',
-        gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
-      }).then((data) => {
+      await this.punkContract.methods.punksOfferedForSale(this.punkId).call(this.gasConfig).then((data) => {
         this.isForSale = data.isForSale
         this.forSalePrice = new this.hmy.utils.Unit(data.minValue).toOne()
       })
     },
     async getPunkBids() {
-      await this.punkContract.methods.punkBids(this.punkId).call({
-        gasLimit: '1000000',
-        gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
-      }).then((data) => {
+      await this.punkContract.methods.punkBids(this.punkId).call(this.gasConfig).then((data) => {
         if (data.hasBid) {
           this.hasBid = true
           this.bidder = data.bidder
           this.bidderB32 = this.hmy.crypto.toBech32(data.bidder)
           this.bidValue = new this.hmy.utils.Unit(data.value).toOne()
         }
-        console.log(data)
       })
     },
     setPunkForSale() {
@@ -241,10 +235,7 @@ export default {
         if (value > 0) {
           this.isForSaleLoading = true
           priceAsWei = new this.hmy.utils.Unit(value).asOne().toWei()
-          this.extPunks.methods.offerPunkForSale(this.punkId, priceAsWei).send({
-            gasLimit: '1000000',
-            gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
-          }).on('transactionHash', (hash) => {
+          this.extPunks.methods.offerPunkForSale(this.punkId, priceAsWei).send(this.gasConfig).on('transactionHash', (hash) => {
             console.log('hash', hash)
             let hashText = hash.slice(0, 12)+"...."+hash.slice(-8)
             this.$notify({
@@ -272,7 +263,9 @@ export default {
                 });
                 window.location.reload()
               }
-          }).on('error', console.error)
+          }).on('error', (error) => {
+              console.log('error', error)
+          })
         }
       }).catch((err) => {   
         console.log(err)
@@ -282,8 +275,7 @@ export default {
       this.isBuyLoading = true
       this.extPunks.methods.buyPunk(this.punkId).send({
         value: new this.hmy.utils.Unit(this.forSalePrice).asOne().toWei(),
-        gasLimit: '1000000',
-        gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
+        ...this.gasConfig
       }).on('transactionHash', (hash) => {
         console.log('hash', hash)
         let hashText = hash.slice(0, 12)+"...."+hash.slice(-8)
@@ -307,7 +299,7 @@ export default {
     },
     bidPunk() {
       let priceAsWei = 0
-      this.$prompt('set your for bid price', 'notice', {
+      this.$prompt('set your bid price', 'notice', {
         confirmButtonText: 'set',
         cancelButtonText: 'cancel',
         inputPattern: /^(([^0][0-9]+|0)\.([0-9]{1,6})$)|^(([^0][0-9]+|0)$)|^(([1-9]+)\.([0-9]{1,6})$)|^(([1-9]+)$)/,
@@ -325,8 +317,7 @@ export default {
           priceAsWei = new this.hmy.utils.Unit(value).asOne().toWei()
           this.extPunks.methods.enterBidForPunk(this.punkId).send({
             value: priceAsWei,
-            gasLimit: '1000000',
-            gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
+            ...this.gasConfig
           }).on('transactionHash', (hash) => {
             console.log('hash', hash)
             let hashText = hash.slice(0, 12)+"...."+hash.slice(-8)
@@ -362,31 +353,35 @@ export default {
       });
     },
     acceptBid() {
-      this.isBuyLoading = true
-      this.extPunks.methods.acceptBidForPunk(this.punkId).send({
-        value: new this.hmy.utils.Unit(this.forSalePrice).asOne().toWei(),
-        gasLimit: '1000000',
-        gasPrice: new this.hmy.utils.Unit('10').asGwei().toWei(),
-      }).on('transactionHash', (hash) => {
-        console.log('hash', hash)
-        let hashText = hash.slice(0, 12)+"...."+hash.slice(-8)
-        this.$notify({
-          title: 'tx created success',
-          dangerouslyUseHTMLString: true,
-          message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a><br>please wait a moment...',
-          duration: 8000,
-          type: 'info'
-        });
-      }).on('receipt', (receipt) => {
-          console.log('receipt', receipt)
-      }).on('confirmation', (confirmationNumber, receipt) => {
-          console.log('confirmationNumber', confirmationNumber, receipt)
-          this.isBuyLoading = false
-          this.$message({
-            message: 'buy punk success',
-            type: 'success'
+      this.$confirm('do you want to accept bid price('+ this.bidValue +' $ONE) for this punk?', 'Notice', {
+        confirmButtonText: 'sure',
+        cancelButtonText: 'cancel',
+        type: 'warning'
+      }).then(() => {
+        this.isAcceptBideLoading = true
+        let minPriceWei = new this.hmy.utils.Unit(this.bidValue).asOne().toWei()
+        this.extPunks.methods.acceptBidForPunk(this.punkId, minPriceWei).send(this.gasConfig).on('transactionHash', (hash) => {
+          console.log('hash', hash)
+          let hashText = hash.slice(0, 12)+"...."+hash.slice(-8)
+          this.$notify({
+            title: 'tx created success',
+            dangerouslyUseHTMLString: true,
+            message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a><br>please wait a moment...',
+            duration: 8000,
+            type: 'info'
           });
-      }).on('error', console.error)
+        }).on('receipt', (receipt) => {
+            console.log('receipt', receipt)
+        }).on('confirmation', (confirmationNumber, receipt) => {
+            console.log('confirmationNumber', confirmationNumber, receipt)
+            this.isAcceptBideLoading = false
+            this.$message({
+              message: 'accept bid success',
+              type: 'success'
+            });
+        }).on('error', console.error)
+      }).catch(() => {
+      });
     },
     getHistoryTransaction() {
       
