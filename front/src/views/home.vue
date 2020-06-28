@@ -13,7 +13,8 @@
           <el-col :span="24">
             <h1 class="intro-title">HarmonyPunks</h1>
             <div class="intro-content">
-              Currently 22 unique collectible characters with proof of ownership stored on the Harmony blockchain. Inspired by Harmony's culture "what you do is who you are", with the Harmony ERC-721 standard, we not only power the digital art and collectibles, also deliver our core values in Harmony through the "Non-Fungible Token".
+              <p>Currently we offer 24 unique collectible characters of Harmony with proof of ownership stored on the Harmony blockchain. Inspired by Harmony's culture "what you do is who you are", these collectibles are editable once owned so the owner can write some nice stuff on the collectible card, it might even go up in price because of that!.</p>
+              <p>Backed by the Harmony ERC-721 standard, we not only power the digital art and collectibles, we also deliver our core values in Harmony through the "Non-Fungible Token", you buy it and keep it!</p>
             </div>
           </el-col>
         </el-row>
@@ -37,7 +38,12 @@
         <el-row class="row-rule">
           <el-col :span="24">
             <div class="rule-content">
-              The HarmonyPunks are 22 uniquely generated characters. No two are exactly alike, and each one of them can be officially owned by a single person on the Harmony blockchain. Originally, they could be claimed for free by anybody with an Harmony wallet, but all 18 were quickly claimed. Now they must be purchased from someone via the marketplace that's also embedded in the blockchain. Via this market you can buy, bid on, and offer punks for sale. The Harmonauts figure above is connected to the Harmony network and has been colored to show you the status of every Punk in the market. Punks with a blue background have been claimed. Punks with a red background are available for sale by their owner. Finally, punks with a purple background have an active bid on them. You can click to zoom in on a Punk and reveal its details.
+              <p>The HarmonyPunks are 24 uniquely generated characters. No two are exactly alike, and each one of them can be officially owned by a single person on the Harmony blockchain. Originally, they could be claimed for free by anybody with an Harmony wallet, but all 24 were quickly claimed. Now they must be purchased from someone via the marketplace that's also embedded in the blockchain. Via this market you can buy, bid on, and offer punks for sale. The Harmonauts figures above are connected to the Harmony network and have been colored to show you the status of every Punk in the market.</p>
+              <ul>
+                <li>Punks with a <span style="background-color: #adc9d6;">blue background</span> have been claimed.</li>
+                <li>Punks with a <span style="background-color: #d6adad;">red background</span> are available for sale by their owner.</li>
+                <li>Finally, punks with a <span style="background-color: #b8a7ce;">purple background</span> have an active bid on them. You can click to zoom in on a Punk and reveal its details.</li>
+              </ul>
             </div>
           </el-col>
         </el-row>
@@ -93,7 +99,7 @@
           <el-col :span="24">
             <h2>What is a HarmonyPunks?</h2>
             <div class="what-content">
-              The HarmonyPunks are 24x24 pixel art images, generated algorithmically. Most are punky-looking guys and girls, but there are a few rarer types mixed in: Apes, Zombies and even the odd Alien. Every punk has their own profile page that shows their attributes as well as their ownership/for-sale status (here's an example).
+              The HarmonyPunks are 165x165 pixelated images of your company personnel. These are the guys and girls that make Harmony work! There are a few rarer types mixed in: a community manager and even some odd P-OPS members. Every punk has their own profile page with their characteristics and also as well as their ownership/for-sale status.
             </div>
           </el-col>
         </el-row>
@@ -207,7 +213,7 @@ export default {
       }).on('error', console.error)
     },
     loadImage() {
-      for (let index = 1; index < 23; index++) {
+      for (let index = 1; index < 25; index++) {
         let imageIndex = (index < 10) ? '0' + index : '' + index;
         this.punkImages.push({
           id: index,

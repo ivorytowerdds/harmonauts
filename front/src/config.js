@@ -605,7 +605,12 @@ export const punksDescConfig = {
   2: 'Act always calm and easy, until speaking about technical stuff, especially about Harmony chain. Then the 🔥 turns on!',
   3: 'Looks like an American surf dude who likes to BBQ, but actually love to run community and business initiatives!',
   4: 'Sounds like your average Indian support guy, but actually is our DeFi/CrossFi expert!',
+  5: 'You would think that he’s always running or hiking, but he’s actually plugged into our harmony matrix and is our uptime human',
+  6: 'He can be your favorite professor, a creative entrepreneur, a healthy habit keeper who gets up at 5am everyday to do yoga and now a magician managing all the stuffs in Harmony',
   11: 'He’s Clark Kent behind a keyboard working on resharding, but breaks out the Superman cape on the soccer pitch!',
+  12: 'Did you know that behind the friendly smile that Dennis has fiery energy for hacking together apps, you could say he’s the Won',
+  16: 'A child with many question marks is full of desire for knowledge, but actually is a very 👍 partner! can learn a lot every time communicate with her',
+  24: 'You’re not so average day community guide, but watch out for him when starting to talk! He will talk your ears of (instead of bite them off)!',
 }
 
 export const punksAccessoriesConfig = {
