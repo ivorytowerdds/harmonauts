@@ -12,7 +12,7 @@
         </el-row>
         <el-row class="row-intro">
           <el-col :span="24">
-            <h1 class="intro-title">HarmonyPunks</h1>
+            <h1 class="intro-title">Harmonauts</h1>
             <div class="intro-content">
               <p>Currently we offer 24 unique collectible characters of Harmony with proof of ownership stored on the Harmony blockchain. Inspired by Harmony's culture "what you do is who you are", these collectibles are editable once owned so the owner can write some nice stuff on the collectible card, it might even go up in price because of that!.</p>
               <p>Backed by the Harmony ERC-721 standard, we not only power the digital art and collectibles, we also deliver our core values in Harmony through the "Non-Fungible Token", you buy it and keep it!</p>
@@ -39,7 +39,7 @@
         <el-row class="row-rule">
           <el-col :span="24">
             <div class="rule-content">
-              <p>The HarmonyPunks are 24 uniquely generated characters. No two are exactly alike, and each one of them can be officially owned by a single person on the Harmony blockchain. Originally, they could be claimed for free by anybody with an Harmony wallet, but all 24 were quickly claimed. Now they must be purchased from someone via the marketplace that's also embedded in the blockchain. Via this market you can buy, bid on, and offer punks for sale. The Harmonauts figures above are connected to the Harmony network and have been colored to show you the status of every Punk in the market.</p>
+              <p>The Harmonauts are 24 uniquely generated characters. No two are exactly alike, and each one of them can be officially owned by a single person on the Harmony blockchain. Originally, they could be claimed for free by anybody with an Harmony wallet, but all 24 were quickly claimed. Now they must be purchased from someone via the marketplace that's also embedded in the blockchain. Via this market you can buy, bid on, and offer punks for sale. The Harmonauts figures above are connected to the Harmony network and have been colored to show you the status of every Punk in the market.</p>
               <ul>
                 <li>Punks with a <span style="background-color: #adc9d6;">blue background</span> have been claimed.</li>
                 <li>Punks with a <span style="background-color: #d6adad;">red background</span> are available for sale by their owner.</li>
@@ -55,15 +55,15 @@
               <el-row>
                 <el-col :span="8">
                   <div>Estimated Market Cap</div>
-                  <div class="stat-value">17K $ONE</div>
+                  <div class="stat-value">17K ONE</div>
                 </el-col>
                 <el-col :span="8">
                   <div>Total Value of All Sales</div>
-                  <div class="stat-value">11.2K $ONE</div>
+                  <div class="stat-value">11.2K ONE</div>
                 </el-col>
                 <el-col :span="8">
                   <div>Average Sale Price</div>
-                  <div class="stat-value">271 $ONE</div>
+                  <div class="stat-value">271 ONE</div>
                 </el-col>
               </el-row>
             </div>
@@ -98,9 +98,9 @@
         </el-row> -->
         <el-row class="row-what">
           <el-col :span="24">
-            <h2>What is a HarmonyPunks?</h2>
+            <h2>What is a Harmonauts?</h2>
             <div class="what-content">
-              The HarmonyPunks are 165x165 pixelated images of your company personnel. These are the guys and girls that make Harmony work! There are a few rarer types mixed in: a community manager and even some odd P-OPS members. Every punk has their own profile page with their characteristics and also as well as their ownership/for-sale status.
+              The Harmonauts are 165x165 pixelated images of your company personnel. These are the guys and girls that make Harmony work! There are a few rarer types mixed in: a community manager and even some odd P-OPS members. Every punk has their own profile page with their characteristics and also as well as their ownership/for-sale status.
             </div>
           </el-col>
         </el-row>
@@ -109,9 +109,9 @@
             <h2>How do I get a Punk?</h2>
             <div class="how-content">
               <p>1.Download and install a Chrome browser plugin called MathWallet. This will allow websites (that you authorize) access to your Harmony account.</p>
-              <p>2.If you made a new account, buy some $ONE. You can buy $ONE from <el-link type="primary" :underline="false" href="https://docs.harmony.one/home/partners/ecosystem#exchanges">these</el-link> exchanges.</p>
+              <p>2.If you made a new account, buy some ONE. You can buy ONE from <el-link type="primary" :underline="false" href="https://docs.harmony.one/home/partners/ecosystem#exchanges">these</el-link> exchanges.</p>
               <p>3.Once you have the plugin installed, this website will recognize it and add buttons that allow you to bid on, buy and sell punks directly in the interface.</p>
-              <p>4.For example, you can buy Punk <router-link :to="'/punk/1'"><el-link type="primary" :underline="false">#1</el-link></router-link> for 300,319 $ONE.</p>
+              <p>4.For example, you can buy Punk <router-link :to="'/punk/1'"><el-link type="primary" :underline="false">#1</el-link></router-link> for 300,319 ONE.</p>
             </div>
           </el-col>
         </el-row>

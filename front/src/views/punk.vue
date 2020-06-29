@@ -6,7 +6,7 @@
         <el-row>
           <el-col :span="24">
             <el-breadcrumb separator-class="el-icon-arrow-right" class="punk-breadcrumb">
-              <el-breadcrumb-item :to="{ path: '/home' }">Harmonypunks</el-breadcrumb-item>
+              <el-breadcrumb-item :to="{ path: '/home' }">Harmonauts</el-breadcrumb-item>
               <el-breadcrumb-item>#{{ this.punkId }}</el-breadcrumb-item>
             </el-breadcrumb>
           </el-col>
@@ -25,7 +25,7 @@
           <el-col :span="20" :offset="1">
             <el-row>
               <el-col :span="24">
-                <div class="punk-title">HarmonyPunk #{{ punkId }}</div>
+                <div class="punk-title">Harmonauts #{{ punkId }}</div>
                 <div class="punk-desc" v-if="punkDesc">{{ punkDesc }}</div>
                 <div class="punk-sex"><b>One of {{ punkSex.count }} <span class="punk-sex-title">{{ punkSex.sex }}</span> punks.</b></div>
               </el-col>
@@ -51,13 +51,13 @@
                 This punk is currently owned by address <span class="punk-owner-b32">{{ ownerB32Text }}</span>
               </div>
               <div class="punk-status-text" v-if="isForSale">
-                This punk is currently for sale by owner for <span class="punk-for-sale-price">{{ forSalePrice }}</span> $ONE
+                This punk is currently for sale by owner for <span class="punk-for-sale-price">{{ forSalePrice }}</span> ONE
               </div>
               <div class="punk-status-text" v-else>
                 This punk has not been listed for sale by its owner.
               </div>
               <div class="punk-status-text" v-if="hasBid">
-                There is a bid of <span class="punk-bid-price">{{ bidValue }}</span> $ONE for this punk from <span class="punk-bidder-b32">{{ bidderB32Text }}</span>
+                There is a bid of <span class="punk-bid-price">{{ bidValue }}</span> ONE for this punk from <span class="punk-bidder-b32">{{ bidderB32Text }}</span>
               </div>
               <div class="punk-status-text" v-else>
                 There are currently no bids on this punk.
@@ -73,7 +73,7 @@
                 </el-alert>
               </el-col>
             </el-row>
-            <el-row class="row-panel" :gutter="20" v-if="isLoadFinish && address != '0x0'">
+            <el-row class="row-panel" :gutter="20" v-if="isLoadFinish && address != '0x0' && owner != '0x0000000000000000000000000000000000000000'">
               <template v-if="owner == address">
                 <el-col :span="6">
                   <el-button type="primary" :loading="isForSaleLoading" icon="el-icon-truck" @click="setPunkForSale">For Sale</el-button>
@@ -117,7 +117,7 @@
                   </el-table-column>
                   <el-table-column
                     prop="amount"
-                    label="Amount($ONE)">
+                    label="Amount(ONE)">
                   </el-table-column>
                   <el-table-column
                     prop="txn"
@@ -394,7 +394,7 @@ export default {
       });
     },
     acceptBid() {
-      this.$confirm('do you want to accept bid price('+ this.bidValue +' $ONE) for this punk?', 'Notice', {
+      this.$confirm('do you want to accept bid price('+ this.bidValue +' ONE) for this punk?', 'Notice', {
         confirmButtonText: 'sure',
         cancelButtonText: 'cancel',
         type: 'warning'

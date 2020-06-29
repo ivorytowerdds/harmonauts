@@ -624,7 +624,7 @@ export const punksDescConfig = {
   20: 'Have you ever seen Silicon Valley at 4 am? Niteesh did, inspired by his role model Kobe, he lives his own dream building the validator /delegator community!',
   21: 'Newest addition to the team, loves to dive into grants and read all about those crazy ideas! Of course all are granted! (NOT!!!)',
   22: 'The big boss of our community, he will light up for you when you are walking in the dark and guide you to the bright new world of Harmony!',
-  23: 'Groot"! One of the first, the guy in charge with bandwidth usage so you\'ll never exceed the limits and keep your funds in pockets and not waste them !',
+  23: '"Groot"! One of the first, the guy in charge with bandwidth usage so you\'ll never exceed the limits and keep your funds in pockets and not waste them !',
   24: 'You’re not so average day community guide, but watch out for him when starting to talk! He will talk your ears of (instead of bite them off)!',
 }
 
