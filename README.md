@@ -18,7 +18,7 @@ If you want to withdraw the token you have in the smart contract to your ONE wal
 
 * Fetch repo
 ```
-git clone https://github.com/ivorytowerdds/harmony-punks.git
+git clone https://github.com/ivorytowerdds/harmonauts.git
 ```
 
 * Install dependencies
@@ -55,3 +55,7 @@ truffle exec test/[TEST SCRIPT].js --network mainnet
 
 ## Disclaimer !!
 This project is sourced from [cryptopunks](https://github.com/larvalabs/cryptopunks), an open source project. We are building it for technology demonstration, and not for commercial purposes.
+
+## Acknowledgements
+Haodi Jiang
+Jurgen Bravenboer
