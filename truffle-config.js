@@ -4,6 +4,12 @@ const { TruffleProvider } = require('@harmony-js/core')
 const testnet_mnemonic = process.env.TESTNET_MNEMONIC
 const testnet_private_key = process.env.TESTNET_PRIVATE_KEY
 const testnet_url = process.env.TESTNET_0_URL
+
+//Testnet2
+const testnet_1_mnemonic = process.env.TESTNET_1_MNEMONIC
+const testnet_1_private_key = process.env.TESTNET_1_PRIVATE_KEY
+const testnet_1_url = process.env.TESTNET_1_URL
+
 //Mainnet
 const mainnet_mnemonic = process.env.MAINNET_MNEMONIC
 const mainnet_private_key = process.env.MAINNET_PRIVATE_KEY
@@ -15,8 +21,22 @@ gasPrice = process.env.GAS_PRICE
 
 module.exports = {
   networks: {
-    testnet: {
+    testnet1: {
       network_id: '2', 
+      provider: () => {
+        const truffleProvider = new TruffleProvider(
+          testnet_1_url,
+          { memonic: testnet_1_mnemonic },
+          { shardID: 0, chainId: 2 },
+          { gasLimit: gasLimit, gasPrice: gasPrice},
+        );
+        const newAcc = truffleProvider.addByPrivateKey(testnet_1_private_key);
+        truffleProvider.setSigner(newAcc);
+        return truffleProvider;
+      },
+    },
+    testnet: {
+      network_id: '2',
       provider: () => {
         const truffleProvider = new TruffleProvider(
           testnet_url,

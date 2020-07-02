@@ -37,7 +37,8 @@ contract CryptoPunksMarket {
         address bidder;
         uint value;
     }
-
+    
+    
     // A record of punks that are offered for sale at a specific minimum value, and perhaps to a specific person
     mapping (uint => Offer) public punksOfferedForSale;
 
@@ -59,9 +60,9 @@ contract CryptoPunksMarket {
     function CryptoPunksMarket() payable {
         //        balanceOf[msg.sender] = initialSupply;              // Give the creator all initial tokens
         owner = msg.sender;
-        totalSupply = 10000;                        // Update total supply
+        totalSupply = 24;                        // Update total supply
         punksRemainingToAssign = totalSupply;
-        name = "CRYPTOPUNKS";                                   // Set the name for display purposes
+        name = "HARMONYPUNKS";                                   // Set the name for display purposes
         symbol = "Ͼ";                               // Set the symbol for display purposes
         decimals = 0;                                       // Amount of decimals for display purposes
     }
@@ -69,7 +70,7 @@ contract CryptoPunksMarket {
     function setInitialOwner(address to, uint punkIndex) {
         if (msg.sender != owner) throw;
         if (allPunksAssigned) throw;
-        if (punkIndex >= 10000) throw;
+        if (punkIndex >= totalSupply + 1) throw;
         if (punkIndexToAddress[punkIndex] != to) {
             if (punkIndexToAddress[punkIndex] != 0x0) {
                 balanceOf[punkIndexToAddress[punkIndex]]--;
@@ -99,7 +100,7 @@ contract CryptoPunksMarket {
         if (!allPunksAssigned) throw;
         if (punksRemainingToAssign == 0) throw;
         if (punkIndexToAddress[punkIndex] != 0x0) throw;
-        if (punkIndex >= 10000) throw;
+        if (punkIndex >= totalSupply + 1) throw;
         punkIndexToAddress[punkIndex] = msg.sender;
         balanceOf[msg.sender]++;
         punksRemainingToAssign--;
@@ -110,7 +111,7 @@ contract CryptoPunksMarket {
     function transferPunk(address to, uint punkIndex) {
         if (!allPunksAssigned) throw;
         if (punkIndexToAddress[punkIndex] != msg.sender) throw;
-        if (punkIndex >= 10000) throw;
+        if (punkIndex > totalSupply +1 ) throw;
         if (punksOfferedForSale[punkIndex].isForSale) {
             punkNoLongerForSale(punkIndex);
         }
@@ -132,7 +133,7 @@ contract CryptoPunksMarket {
     function punkNoLongerForSale(uint punkIndex) {
         if (!allPunksAssigned) throw;
         if (punkIndexToAddress[punkIndex] != msg.sender) throw;
-        if (punkIndex >= 10000) throw;
+        if (punkIndex >= totalSupply +1) throw;
         punksOfferedForSale[punkIndex] = Offer(false, punkIndex, msg.sender, 0, 0x0);
         PunkNoLongerForSale(punkIndex);
     }
@@ -230,7 +231,7 @@ contract CryptoPunksMarket {
     }
 
     function withdrawBidForPunk(uint punkIndex) {
-        if (punkIndex >= 10000) throw;
+        if (punkIndex >= 10) throw;
         if (!allPunksAssigned) throw;
         if (punkIndexToAddress[punkIndex] == 0x0) throw;
         if (punkIndexToAddress[punkIndex] == msg.sender) throw;
@@ -242,5 +243,51 @@ contract CryptoPunksMarket {
         // Refund the bid money
         msg.sender.transfer(amount);
     }
+   
+    function getPunkInfo(uint punkIndex) public view returns (
+      address owner,
+      bool isForSale,
+      uint minValue,
+      address onlySellTo,
+      bool hasBid,
+      address bidder,
+      uint bidValue 
+    ) {
+      owner = punkIndexToAddress[punkIndex];
+      Offer offer = punksOfferedForSale[punkIndex];
+      isForSale = offer.isForSale;
+      minValue = offer.minValue;
+      onlySellTo = offer.onlySellTo;
+      Bid bid = punkBids[punkIndex];
+      hasBid = bid.hasBid; 
+      bidder = bid.bidder;
+      bidValue = bid.value;
+    }
+    
+    function getOnSaleLength() public view returns (uint256 size) {
+      size = 0; 
+      for (uint i = 0; i < totalSupply; i++) {
+        Offer offer = punksOfferedForSale[i];
+        if (offer.isForSale) {
+          size += 1;
+        }
+      }
+      return size;
+    }
 
+    function getOnSalePunk() public view returns (
+      uint256[] memory onSalePunks
+    ) {
+      uint256 size = getOnSaleLength();
+      uint256[] memory result = new uint256[](size);
+      uint256 resultIndex = 0;
+      for (uint i = 0; i < totalSupply; i++) {
+        Offer offer = punksOfferedForSale[i];
+        if (offer.isForSale) {
+          result[resultIndex] = i;
+          resultIndex++;
+        }
+      }
+      return result;
+    }
 }
