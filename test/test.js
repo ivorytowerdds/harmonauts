@@ -1,4 +1,3 @@
-//require('babel-polyfill');
 var CryptoPunksMarket = artifacts.require("./CryptoPunksMarket.sol");
 
 const myAddress = '0xE0987e8Deb66E3AA1De62A957Bb0B83361Df0826'
@@ -31,8 +30,8 @@ module.exports = function () {
     process.exit(0);
   }
   contractInfo().then(() => {
-    setInitialOwner(myAddress, 0).then(() => {
-      getPunkInfo(0);
+    setInitialOwner(myAddress, 3).then(() => {
+      getPunkInfo(3);
     });
   });
 };
