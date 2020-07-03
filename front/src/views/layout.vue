@@ -150,7 +150,7 @@ export default {
         this.$notify({
           title: 'tx created success',
           dangerouslyUseHTMLString: true,
-          message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a>',
+          message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a><br>please wait a moment...',
           duration: 8000,
           type: 'info'
         });

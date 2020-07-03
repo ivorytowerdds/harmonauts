@@ -194,7 +194,7 @@ export default {
       }).on('error', console.error)
     },
     async getPunk() {
-      await this.extPunks.methods.getPunk(16).send({
+      await this.extPunks.methods.getPunk(this.searchPunkId).send({
         gasLimit: '1000000',
         gasPrice: new this.hmy.utils.Unit('0.005').asGwei().toWei(),
       }).on('transactionHash', function (hash) {
@@ -228,7 +228,7 @@ export default {
     this.loadImage()
   },
   mounted: function () {
-    // this.initContract()
+    this.initContract()
   }
 }
 </script>

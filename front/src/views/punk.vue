@@ -78,8 +78,14 @@
                 <el-col :span="6">
                   <el-button type="primary" :loading="isForSaleLoading" icon="el-icon-truck" @click="setPunkForSale">For Sale</el-button>
                 </el-col>
+                <el-col :span="8" v-if="isForSale">
+                  <el-button type="info" :loading="isNLForSaleLoading" icon="el-icon-document-delete" @click="setPunkNLForSale">No Longer For Sale</el-button>
+                </el-col>
                 <el-col :span="6" v-if="hasBid">
-                  <el-button type="danger" :loading="isAcceptBideLoading" icon="el-icon-document-checked" @click="acceptBid">Accept Bid</el-button>
+                  <el-button type="danger" :loading="isAcceptBidLoading" icon="el-icon-document-checked" @click="acceptBid">Accept Bid</el-button>
+                </el-col>
+                <el-col :span="6">
+                  <el-button type="warning" :loading="isTransferLoading" icon="el-icon-guide" @click="transfer">Transfer</el-button>
                 </el-col>
               </template>
               <template v-else>
@@ -88,6 +94,9 @@
                 </el-col>
                 <el-col :span="6">
                   <el-button type="warning" :loading="isBidLoading" icon="el-icon-chat-dot-round" @click="bidPunk">Bid</el-button>
+                </el-col>
+                <el-col :span="6">
+                  <el-button type="success" :loading="isWithdrawBidLoading" icon="el-icon-document-remove" @click="withdrawBid">Withdraw Bid</el-button>
                 </el-col>
               </template>
             </el-row>
@@ -180,35 +189,17 @@ export default {
       // load state
       isLoadFinish: false,
       isForSaleLoading: false,
+      isNLForSaleLoading: false,
       isBuyLoading: false,
       isBidLoading: false,
-      isAcceptBideLoading: false,
+      isAcceptBidLoading: false,
+      isTransferLoading: false,
+      isWithdrawBidLoading: false,
       // history
       eventTableData: [],
     }
   },
   methods: {
-    waitForInjected() {
-      return new Promise((resolve) => {
-        const check = () => {
-            if (!window.harmony) setTimeout(check, 250)
-            else {
-              resolve(window.harmony)
-            }
-        }
-        check();
-      }) 
-    },
-    async initContract() {
-      await this.waitForInjected()
-
-      let harmonyEx = new HarmonyExtension(window.harmony, {
-        chainType: ChainType.Harmony,
-        chainId: ChainID.HmyMainnet,
-      })
-      harmonyEx.setProvider(contractConfig.url)
-      this.extPunks = harmonyEx.contracts.createContract(contractConfig.abi, contractConfig.address)
-    },
     loadImage(id) {
       let imageIndex = (id < 10) ? '0' + id : '' + id;
       this.punkImage = require('../assets/punks/' + imageIndex + '.png')
@@ -232,6 +223,27 @@ export default {
           })
         }
       }
+    },
+    waitForInjected() {
+      return new Promise((resolve) => {
+        const check = () => {
+            if (!window.harmony) setTimeout(check, 250)
+            else {
+              resolve(window.harmony)
+            }
+        }
+        check();
+      }) 
+    },
+    async initContract() {
+      await this.waitForInjected()
+
+      let harmonyEx = new HarmonyExtension(window.harmony, {
+        chainType: ChainType.Harmony,
+        chainId: ChainID.HmyMainnet,
+      })
+      harmonyEx.setProvider(contractConfig.url)
+      this.extPunks = harmonyEx.contracts.createContract(contractConfig.abi, contractConfig.address)
     },
     async getPunkOwner() {
       await this.punkContract.methods.punkIndexToAddress(this.punkId).call(this.gasConfig).then((data) => {
@@ -282,7 +294,7 @@ export default {
             this.$notify({
               title: 'tx created success',
               dangerouslyUseHTMLString: true,
-              message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a>',
+              message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a><br>please wait a moment...',
               duration: 8000,
               type: 'info'
             });
@@ -311,6 +323,40 @@ export default {
       }).catch((err) => {   
         console.log(err)
       });
+    },
+    setPunkNLForSale() {
+      this.isNLForSaleLoading = true
+      this.extPunks.methods.punkNoLongerForSale(this.punkId).send(this.gasConfig).on('transactionHash', (hash) => {
+        console.log('hash', hash)
+        let hashText = hash.slice(0, 12)+"...."+hash.slice(-8)
+        this.$notify({
+          title: 'tx created success',
+          dangerouslyUseHTMLString: true,
+          message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a><br>please wait a moment...',
+          duration: 8000,
+          type: 'info'
+        });
+      }).on('receipt', (receipt) => {
+          console.log('receipt', receipt)
+      }).on('confirmation', (confirmationNumber, receipt) => {
+          console.log('confirmationNumber', confirmationNumber, receipt)
+          this.isNLForSaleLoading = false
+          let resSet = confirmationNumber.split(':')
+          if (resSet[0] == 'transaction failed') {
+            this.$message({
+              message: confirmationNumber,
+              type: 'error'
+            });
+          } else {
+            this.$message({
+              message: 'set no longer for sale success',
+              type: 'success'
+            });
+            window.location.reload()
+          }
+      }).on('error', (error) => {
+          console.log('error', error)
+      })
     },
     buyPunk() {
       this.isBuyLoading = true
@@ -399,7 +445,7 @@ export default {
         cancelButtonText: 'cancel',
         type: 'warning'
       }).then(() => {
-        this.isAcceptBideLoading = true
+        this.isAcceptBidLoading = true
         let minPriceWei = new this.hmy.utils.Unit(this.bidValue).asOne().toWei()
         this.extPunks.methods.acceptBidForPunk(this.punkId, minPriceWei).send(this.gasConfig).on('transactionHash', (hash) => {
           console.log('hash', hash)
@@ -415,13 +461,90 @@ export default {
             console.log('receipt', receipt)
         }).on('confirmation', (confirmationNumber, receipt) => {
             console.log('confirmationNumber', confirmationNumber, receipt)
-            this.isAcceptBideLoading = false
+            this.isAcceptBidLoading = false
             this.$message({
               message: 'accept bid success',
               type: 'success'
             });
+            window.location.reload()
         }).on('error', console.error)
       }).catch(() => {
+      });
+    },
+    withdrawBid() {
+      this.isWithdrawBidLoading = true
+      this.extPunks.methods.withdrawBidForPunk(this.punkId).send(this.gasConfig).on('transactionHash', (hash) => {
+        console.log('hash', hash)
+        let hashText = hash.slice(0, 12)+"...."+hash.slice(-8)
+        this.$notify({
+          title: 'tx created success',
+          dangerouslyUseHTMLString: true,
+          message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a><br>please wait a moment...',
+          duration: 8000,
+          type: 'info'
+        });
+      }).on('receipt', (receipt) => {
+          console.log('receipt', receipt)
+      }).on('confirmation', (confirmationNumber, receipt) => {
+          console.log('confirmationNumber', confirmationNumber, receipt)
+          this.isWithdrawBidLoading = false
+          let resSet = confirmationNumber.split(':')
+          if (resSet[0] == 'transaction failed') {
+            this.$message({
+              message: confirmationNumber,
+              type: 'error'
+            });
+          } else {
+            this.$message({
+              message: 'withdraw for Bid success',
+              type: 'success'
+            });
+            window.location.reload()
+          }
+      }).on('error', (error) => {
+          console.log('error', error)
+      })
+    },
+    transfer() {
+      this.$prompt('set address you want to transfer', 'notice', {
+        confirmButtonText: 'set',
+        cancelButtonText: 'cancel',
+        inputPattern: /^one1/,
+        inputErrorMessage: 'please enter a correct address (start with one1)'
+      }).then(({ value }) => {
+        this.isTransferLoading = true
+        let toAddress = this.hmy.crypto.fromBech32(value)
+        this.extPunks.methods.transferPunk(toAddress, this.punkId).send(this.gasConfig).on('transactionHash', (hash) => {
+          console.log('hash', hash)
+          let hashText = hash.slice(0, 12)+"...."+hash.slice(-8)
+          this.$notify({
+            title: 'tx created success',
+            dangerouslyUseHTMLString: true,
+            message: '<a href="https://explorer.harmony.one/#/tx/'+hash+'" target="_blank">'+hashText+'</a><br>please wait a moment...',
+            duration: 8000,
+            type: 'info'
+          });
+        }).on('receipt', (receipt) => {
+            console.log('receipt', receipt)
+        }).on('confirmation', (confirmationNumber, receipt) => {
+            console.log('confirmationNumber', confirmationNumber, receipt)
+            this.isTransferLoading = false
+            let resSet = confirmationNumber.split(':')
+            if (resSet[0] == 'transaction failed') {
+              this.$message({
+                message: confirmationNumber,
+                type: 'error'
+              });
+            } else {
+              this.$message({
+                message: 'transfer success',
+                type: 'success'
+              });
+              window.location.reload()
+            }
+        }).on('error', console.error)
+      }).catch((err) => {   
+        console.log(err)
       });
     },
     getHistoryTransaction() {
