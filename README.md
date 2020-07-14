@@ -6,6 +6,8 @@ There are currently three ways to get the valuable Harmonauts.
 - Another way is to bid on the Harmonauts you want no matter it's on sale or not, the owner will decide which bid to accept. The first bidder can provide any price he wants, however new bidder needs to offer a price higher than the exiting bidding price.
 If you want to withdraw the token you have in the smart contract to your ONE wallet, click the withdraw button.
 
+The smart contract addresss is `0xCC04Edd0D834Fcd347097d87CaDEfADc0044FAE2`, check [explorer](https://explorer.harmony.one/#/address/one1lcjzgr8hwd5kkkltd3ckm240up47rln3t00vpx) for live on-chain details.
+
 # Install instructions
 
 ## Requirements
