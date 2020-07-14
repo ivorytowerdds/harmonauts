@@ -12,9 +12,11 @@ We get the transaction history from Harmony RPC call `hmyv2_getTransactionHistor
 ## Instructions
 - Create a tmux new session `tmux new -s harmonauts`
 - RUN `python3 [PATH]/get_punk_txs_history.py --endpoints [ENDPOINTS] --address [Smart contract address]`
-- Get decoded transaction history through Realtime Database API: `curl https:/{firebase project name}.firebaseio.com/{reference name}.json` e.g. `curl https://harmony-explorer-mainnet.firebaseio.com/harmony-punk`
 
-## Output
+## Folder
 - `data`: save transaction history, transaction page, and transaction hash
 - `log`: record file updating info
 - `credential`: store the firebase private key json file 
+
+## Output
+Get decoded transaction history through Realtime Database API: `curl https:/{firebase project name}.firebaseio.com/{reference name}.json` e.g. `curl https://harmony-explorer-mainnet.firebaseio.com/harmony-punk.json`
